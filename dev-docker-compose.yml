@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  bob:
+    extends: 
+      file: docker-compose.yml
+      service: bob
+    volumes: 
+      - ./bob:/app
+    networks:
+      - mattermost
+    tty: true
+
+networks:
+  mattermost:
+    external: true
+    name: mattermost-docker_default
+    
