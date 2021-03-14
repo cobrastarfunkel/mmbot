@@ -1,26 +1,25 @@
-from bobs_bus import bus
+from bobs_bus import bus, logger, bobs_id
+from responses import BobResponse
 import asyncio
 import json
+import sys
+import logging
 
-bus.login()
-bus.posts.create_post(options={
-    'channel_id': 'y9tmz5hzrb8b3nghjpyw5f6xyr',
-    'message': "Im a test message from Bob",
-})
 
-my_id = bus.users.get_user(user_id='me')['id']
+logger.setLevel(logging.DEBUG)
 
-async def my_event_handler(message):
+async def message_handler(message):
     msg = json.loads(message)
-    if 'event' in msg and msg['event'] == 'posted' and 'mentions' in msg['data'] and my_id in msg['data']['mentions']:
+    if 'event' in msg and msg['event'] == 'posted' and 'mentions' in msg['data'] and bobs_id in msg['data']['mentions']:
         post = json.loads(msg['data']['post'])
-        if 'hi' in post['message']:
-            bus.posts.create_post(options={
-                'channel_id': 'y9tmz5hzrb8b3nghjpyw5f6xyr',
-                'message': "Hi! Im a test message from Bob",
-            })
+        channel_id = post['channel_id']
+        
+        logger.debug("In Func")
+        req = BobResponse(bus, channel_id, post)
+        res = req.parse_response()
+        logger.info(f"RES -> {json.dumps(res, indent=2)}")
+        
     else:
-        print(json.dumps(json.loads(message)))
+        logger.debug(json.dumps(msg, indent=2))
 
-
-bus.init_websocket(my_event_handler)
+bus.init_websocket(message_handler)

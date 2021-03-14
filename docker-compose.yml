@@ -4,3 +4,4 @@ services:
     build: bob
     environment: 
       - "BOB_TOKEN=${BOB_TOKEN}"
+      - "TEST_TOKEN=${TEST_TOKEN}"
