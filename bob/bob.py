@@ -4,9 +4,12 @@ import asyncio
 import json
 import sys
 import logging
+import os
 
-
-logger.setLevel(logging.DEBUG)
+if os.getenv('LOG_LEVEL') == "DEBUG":
+    logger.setLevel(logging.DEBUG)
+else:
+    logger.setLevel(logging.INFO)
 
 async def message_handler(message):
     msg = json.loads(message)
@@ -14,8 +17,8 @@ async def message_handler(message):
         post = json.loads(msg['data']['post'])
         channel_id = post['channel_id']
         
-        logger.debug("In Func")
         req = BobResponse(bus, channel_id, post)
+        logger.debug(req)
         res = req.parse_response()
         logger.info(f"RES -> {json.dumps(res, indent=2)}")
         

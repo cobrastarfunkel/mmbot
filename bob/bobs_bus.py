@@ -11,11 +11,10 @@ logger.addHandler(handler)
 
 bus = Driver({
     'url': 'mattermost-docker_web_1',
-    'token': os.environ['BOB_TOKEN'],
+    'token': os.getenv('BOB_TOKEN'),
     'scheme': 'http',
     'port': 80,
     'verify': False,
-    #'debug': True
 })
 
 bus.login()

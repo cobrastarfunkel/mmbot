@@ -4,6 +4,9 @@ services:
     extends: 
       file: docker-compose.yml
       service: bob
+    environment:
+      - PYTHONASYNCIODEBUG=1
+      - LOG_LEVEL=DEBUG
     volumes: 
       - ./bob:/app
     networks:
